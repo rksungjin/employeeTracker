@@ -109,5 +109,35 @@
 </script>
 
 <script src="assets/app.js"></script>
+
+<script>
+    var employeeName = "";
+    var role = "";
+    var startDate = 0;
+    var monthlyRate = "";
+
+    // Capture Button Click
+    $("#theNameButton").on("click", function() {
+      // Don't refresh the page!
+      event.preventDefault();
+
+      // YOUR TASK!!!
+      // Code in the logic for storing and retrieving the most recent user.
+      // Don't forget to provide initial data to your Firebase database.
+      employeeName = $("#nameInput").val().trim();
+      role = $("#roleInput").val().trim();
+      startDate = $("#dateInput").val().trim();
+      monthlyRate = $("#rateInput").val().trim();
+
+      database.ref().set({
+        employeeName: employeeName,
+        role: role,
+        startDate: startDate,
+        monthlyRate: monthlyRate
+      });
+
+    });
+
+</script>
 </body>
 </html>
