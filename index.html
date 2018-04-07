@@ -10,6 +10,8 @@
 
         <link href="https://fonts.googleapis.com/css?family=Chicle" rel="stylesheet">
 
+        <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
     
   </head>
 
@@ -40,7 +42,7 @@
     </div>
     
     <!-- Container for Input -->
-    <table class="table table-striped">
+    <table id= "table" class="table table-striped">
             <thead>
               <tr>
                 <th scope="col">Employee Name</th>
@@ -94,7 +96,7 @@
 <!-- Connecting to javascript  -->
 
 
-<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
 <script>
   // Initialize Firebase
   var config = {
@@ -105,16 +107,14 @@
     storageBucket: "employeetracker-ce155.appspot.com",
     messagingSenderId: "676916336492"
   };
-  firebase.initializeApp(config);
-</script>
+    firebase.initializeApp(config);
 
-<script src="assets/app.js"></script>
+    var dataRef = firebase.database();
 
-<script>
     var employeeName = "";
     var role = "";
-    var startDate = 0;
-    var monthlyRate = "";
+    var startDate = "";
+    var monthlyRate = 0;
 
     // Capture Button Click
     $("#theNameButton").on("click", function() {
@@ -129,7 +129,7 @@
       startDate = $("#dateInput").val().trim();
       monthlyRate = $("#rateInput").val().trim();
 
-      database.ref().set({
+      database.ref().push({
         employeeName: employeeName,
         role: role,
         startDate: startDate,
@@ -138,25 +138,39 @@
 
     });
 
-        database.ref().on("child-added", function(snapshot) {
+        dataRef.ref().on("child_added", function(snapshot) {
 
 // Log everything that's coming out of snapshot
-        console.log(snapshot.val());
-        console.log(snapshot.val().employeeName);
-        console.log(snapshot.val().role);
-        console.log(snapshot.val().startDate);
-        console.log(snapshot.val().monthlyRate);
+        console.log(childSnapshot.val());
+        console.log(childSnapshot.val().employeeName); 
+        console.log(childSnapshot.val().role);
+        console.log(childSnapshot.val().startDate);
+        console.log(childSnapshot.val().monthlyRate);
+
+         $("#table").append("<div class='well'><span id='nameInput'> " + childSnapshot.val().employeeName +
+        " </span><span id='roleInput'> " + childSnapshot.val().role +
+        " </span><span id='dateInput'> " + childSnapshot.val().startDate +
+        " </span><span id='rateInput'> " + childSnapshot.val().monthlyRate + " </span></div>");
+
+       },function(errorObject) {
+      console.log("Errors handled: " + errorObject.code);
+    });
+
+      dataRef.ref().on("child_added", function(snapshot) {
 
         // Change the HTML to reflect
-        $("#nameInput").push(snapshot.val().employeeName);
-        $("#roleInput").push(snapshot.val().role);
-        $("#dateInput").push(snapshot.val().startDate);
-        $("#rateInput").push(snapshot.val().monthlyRate);
 
+        // Add to display div
+        $("#").text(snapshot.val().employeeName);
+        $("#").text(snapshot.val().role);
+        $("#").text(snapshot.val().startDate);
+        $("#").text(snapshot.val().monthlyRate);
+
+            });
+
+    
         // Handle the errors
-        }, function(errorObject) {
-        console.log("Errors handled: " + errorObject.code);
-});
+        
 
 </script>
 </body>
